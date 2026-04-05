@@ -49,6 +49,7 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (data) => {
 
   if (currentUrl) {
     urlDisplay.textContent = currentUrl;
+    urlDisplay.classList.add('clickable');
     noUrlHint.classList.add('hidden');
     btnGo.classList.remove('hidden');
 
@@ -100,6 +101,13 @@ btnGo.addEventListener('click', () => {
   navigate();
 });
 
+urlDisplay.addEventListener('click', () => {
+  if (currentUrl) {
+    cancelCountdown();
+    navigate();
+  }
+});
+
 btnCancel.addEventListener('click', cancelCountdown);
 
 btnSettings.addEventListener('click', openSettings);
@@ -117,6 +125,7 @@ chrome.storage.onChanged.addListener((changes) => {
     currentUrl = changes.defaultUrl.newValue || '';
     if (currentUrl) {
       urlDisplay.textContent = currentUrl;
+      urlDisplay.classList.add('clickable');
       urlDisplay.classList.remove('hidden');
       noUrlHint.classList.add('hidden');
       btnGo.classList.remove('hidden');

@@ -167,6 +167,16 @@ body {
   margin-bottom: 20px;
 }
 
+.url-display.clickable {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.url-display.clickable:hover {
+  color: #c7d2fe;
+}
+
 /* ============================================================
    COUNTDOWN
    ============================================================ */
