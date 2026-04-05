@@ -1,0 +1,253 @@
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+/* ============================================================
+   BACKGROUND GRADIENT
+   ============================================================ */
+body {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  position: relative;
+}
+
+/* ============================================================
+   BACKGROUND BLOBS — CPU-based animation (no transform/GPU)
+   Uses border-radius + background-color cycling via @keyframes.
+   ============================================================ */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  /* No will-change, no transform, no translate — CPU only */
+}
+
+.blob-1 {
+  width: 500px;
+  height: 500px;
+  top: -100px;
+  left: -150px;
+  animation: pulse1 8s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 400px;
+  height: 400px;
+  bottom: -80px;
+  right: -100px;
+  animation: pulse2 10s ease-in-out infinite alternate;
+}
+
+.blob-3 {
+  width: 350px;
+  height: 350px;
+  top: 50%;
+  left: 50%;
+  margin-top: -175px;
+  margin-left: -175px;
+  animation: pulse3 12s ease-in-out infinite alternate;
+}
+
+/* CPU-friendly animations: only background-color & border-radius change */
+@keyframes pulse1 {
+  0%   { background-color: rgba(99,  102, 241, 0.35); border-radius: 50%; }
+  50%  { background-color: rgba(139,  92, 246, 0.30); border-radius: 60% 40% 55% 45%; }
+  100% { background-color: rgba(79,   70, 229, 0.40); border-radius: 45% 55% 40% 60%; }
+}
+
+@keyframes pulse2 {
+  0%   { background-color: rgba(236,  72, 153, 0.30); border-radius: 50%; }
+  50%  { background-color: rgba(168,  85, 247, 0.25); border-radius: 40% 60% 50% 50%; }
+  100% { background-color: rgba(244, 114, 182, 0.35); border-radius: 55% 45% 60% 40%; }
+}
+
+@keyframes pulse3 {
+  0%   { background-color: rgba(56,  189, 248, 0.20); border-radius: 50%; }
+  50%  { background-color: rgba(99,  102, 241, 0.15); border-radius: 60% 40% 45% 55%; }
+  100% { background-color: rgba(34,  211, 238, 0.20); border-radius: 40% 60% 55% 45%; }
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.page-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 24px;
+  padding: 24px;
+}
+
+/* ============================================================
+   GLASSMORPHIC CARD
+   ============================================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  padding: 32px 40px;
+  text-align: center;
+  color: #fff;
+  /* Entry animation — CPU-friendly: margin-top (layout) */
+  animation: card-in 0.5s ease-out both;
+}
+
+@keyframes card-in {
+  from { margin-top: 40px; }
+  to   { margin-top: 0; }
+}
+
+/* ============================================================
+   CLOCK CARD
+   ============================================================ */
+.clock-card {
+  min-width: 340px;
+}
+
+.clock {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+}
+
+.date {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.03em;
+}
+
+/* ============================================================
+   URL CARD
+   ============================================================ */
+.url-card {
+  min-width: 420px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.url-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.url-display {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #a5b4fc;
+  word-break: break-all;
+  min-height: 1.5em;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   COUNTDOWN
+   ============================================================ */
+.countdown-wrap {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.url-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  /* CPU-friendly transitions: background-color, color, border-color */
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary {
+  background-color: #6366f1;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35);
+}
+
+.btn-ghost {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.30);
+}
+
+/* ============================================================
+   HINT & LINK BUTTON
+   ============================================================ */
+.hint {
+  margin-top: 16px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #a5b4fc;
+  font-size: inherit;
+  text-decoration: underline;
+  padding: 0;
+  font-family: inherit;
+}
+
+.link-btn:hover {
+  color: #c7d2fe;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.hidden {
+  display: none !important;
+}

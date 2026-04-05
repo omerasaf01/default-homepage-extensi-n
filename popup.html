@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Default Homepage – Settings</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">🏠</div>
+    <div>
+      <div class="header-title">Default Homepage</div>
+      <div class="header-subtitle">New-tab settings</div>
+    </div>
+  </div>
+
+  <!-- URL field -->
+  <div class="glass-panel">
+    <label class="field-label" for="url-input">Default address</label>
+    <input
+      id="url-input"
+      class="url-input"
+      type="url"
+      placeholder="https://example.com"
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- Auto-redirect toggle -->
+  <div class="glass-panel">
+    <div class="toggle-row">
+      <div class="toggle-label">
+        Auto-redirect on new tab
+        <small>Redirects automatically after a delay</small>
+      </div>
+      <label class="toggle" aria-label="Auto-redirect">
+        <input type="checkbox" id="auto-redirect" />
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <!-- Redirect delay — hidden when toggle is off -->
+    <div class="delay-row hidden-row" id="delay-row">
+      <span class="delay-label">Redirect after</span>
+      <select class="delay-select" id="delay-select">
+        <option value="1">1 second</option>
+        <option value="2">2 seconds</option>
+        <option value="3" selected>3 seconds</option>
+        <option value="5">5 seconds</option>
+        <option value="10">10 seconds</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Save -->
+  <button class="btn-save" id="btn-save">Save settings</button>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

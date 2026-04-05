@@ -1,0 +1,276 @@
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 340px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: #fff;
+  padding: 24px 20px 20px;
+  min-height: 260px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.header-subtitle {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   GLASS PANEL
+   ============================================================ */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.field-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.url-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  /* CPU-friendly transition */
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.url-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.url-input:focus {
+  border-color: #6366f1;
+  background-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* ============================================================
+   TOGGLE ROW
+   ============================================================ */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toggle-label {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.4;
+}
+
+.toggle-label small {
+  display: block;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+/* Toggle switch — CPU-friendly: background-color only */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  display: block;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.toggle input:checked + .toggle-track {
+  background-color: #6366f1;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #fff;
+  top: 2px;
+  left: 2px;
+  /* CPU-friendly: left position instead of transform/translate */
+  transition: left 0.2s;
+}
+
+.toggle input:checked + .toggle-track::after {
+  left: 22px;
+}
+
+/* ============================================================
+   DELAY SELECTOR
+   ============================================================ */
+.delay-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+  /* CPU-friendly show/hide via max-height */
+  overflow: hidden;
+  max-height: 40px;
+  transition: max-height 0.25s ease;
+}
+
+.delay-row.hidden-row {
+  max-height: 0;
+  margin-top: 0;
+}
+
+.delay-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.delay-select {
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.delay-select:focus {
+  border-color: #6366f1;
+}
+
+/* ============================================================
+   SAVE BUTTON
+   ============================================================ */
+.btn-save {
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: none;
+  background-color: #6366f1;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35);
+}
+
+.btn-save:active {
+  background-color: #4338ca;
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  /* CPU-friendly: margin-left for centering instead of transform */
+  margin-left: -120px;
+  width: 240px;
+  background-color: rgba(99, 102, 241, 0.9);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 9px 16px;
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* CPU-friendly: show/hide via max-height + color */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  pointer-events: none;
+}
+
+.toast.visible {
+  max-height: 60px;
+  padding: 9px 16px;
+}
+
+.toast.error {
+  background-color: rgba(239, 68, 68, 0.9);
+}
