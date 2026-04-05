@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab</title>
+  <link rel="stylesheet" href="newtab.css" />
+</head>
+<body>
+
+  <!-- Animated background blobs (CPU-based: background-color, border-radius) -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <div class="page-center">
+
+    <!-- Clock card -->
+    <div class="glass-card clock-card">
+      <div id="clock" class="clock">00:00:00</div>
+      <div id="date"  class="date">Monday, 1 January 2026</div>
+    </div>
+
+    <!-- URL card -->
+    <div class="glass-card url-card">
+      <div class="url-label">Default Homepage</div>
+      <div id="url-display" class="url-display">—</div>
+
+      <div id="countdown-wrap" class="countdown-wrap hidden">
+        Redirecting in <span id="countdown">3</span>s…
+      </div>
+
+      <div class="url-actions">
+        <button id="btn-go"       class="btn btn-primary">Open</button>
+        <button id="btn-cancel"   class="btn btn-ghost hidden">Cancel</button>
+        <button id="btn-settings" class="btn btn-ghost">⚙ Settings</button>
+      </div>
+
+      <div id="no-url-hint" class="hint">
+        No default address configured yet.<br/>
+        Click the extension icon or <button class="link-btn" id="hint-settings">open settings</button>.
+      </div>
+    </div>
+
+  </div>
+
+  <script src="newtab.js"></script>
+</body>
+</html>
