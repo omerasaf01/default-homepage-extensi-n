@@ -23,14 +23,16 @@ body {
 }
 
 /* ============================================================
-   BACKGROUND BLOBS — CPU-based animation (no transform/GPU)
-   Uses border-radius + background-color cycling via @keyframes.
+   BACKGROUND BLOBS — GPU-composited animation (transform + opacity).
+   Uses radial-gradient for soft edges instead of filter:blur()
+   which causes expensive repaints on every frame.
    ============================================================ */
 .bg-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  /* No will-change, no transform, no translate — CPU only */
+  /* will-change lets the browser promote each blob to its own
+     compositor layer so animations run without triggering paint. */
+  will-change: transform, opacity;
 }
 
 .blob-1 {
@@ -38,7 +40,8 @@ body {
   height: 500px;
   top: -100px;
   left: -150px;
-  animation: pulse1 8s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, rgba(99, 102, 241, 0) 70%);
+  animation: float1 8s ease-in-out infinite alternate;
 }
 
 .blob-2 {
@@ -46,7 +49,8 @@ body {
   height: 400px;
   bottom: -80px;
   right: -100px;
-  animation: pulse2 10s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.40) 0%, rgba(236, 72, 153, 0) 70%);
+  animation: float2 10s ease-in-out infinite alternate;
 }
 
 .blob-3 {
@@ -56,26 +60,25 @@ body {
   left: 50%;
   margin-top: -175px;
   margin-left: -175px;
-  animation: pulse3 12s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.30) 0%, rgba(56, 189, 248, 0) 70%);
+  animation: float3 12s ease-in-out infinite alternate;
 }
 
-/* CPU-friendly animations: only background-color & border-radius change */
-@keyframes pulse1 {
-  0%   { background-color: rgba(99,  102, 241, 0.35); border-radius: 50%; }
-  50%  { background-color: rgba(139,  92, 246, 0.30); border-radius: 60% 40% 55% 45%; }
-  100% { background-color: rgba(79,   70, 229, 0.40); border-radius: 45% 55% 40% 60%; }
+/* GPU-composited animations: only transform and opacity change —
+   no paint, no layout recalculation. */
+@keyframes float1 {
+  from { transform: translate(0,    0)    scale(1);    opacity: 0.8; }
+  to   { transform: translate(30px, 20px) scale(1.12); opacity: 1;   }
 }
 
-@keyframes pulse2 {
-  0%   { background-color: rgba(236,  72, 153, 0.30); border-radius: 50%; }
-  50%  { background-color: rgba(168,  85, 247, 0.25); border-radius: 40% 60% 50% 50%; }
-  100% { background-color: rgba(244, 114, 182, 0.35); border-radius: 55% 45% 60% 40%; }
+@keyframes float2 {
+  from { transform: translate(0,     0)     scale(1);    opacity: 0.7; }
+  to   { transform: translate(-20px, -30px) scale(1.15); opacity: 0.9; }
 }
 
-@keyframes pulse3 {
-  0%   { background-color: rgba(56,  189, 248, 0.20); border-radius: 50%; }
-  50%  { background-color: rgba(99,  102, 241, 0.15); border-radius: 60% 40% 45% 55%; }
-  100% { background-color: rgba(34,  211, 238, 0.20); border-radius: 40% 60% 55% 45%; }
+@keyframes float3 {
+  from { transform: translate(0,    0)     scale(1);    opacity: 0.6; }
+  to   { transform: translate(15px, -15px) scale(1.08); opacity: 0.8; }
 }
 
 /* ============================================================
@@ -108,13 +111,13 @@ body {
   padding: 32px 40px;
   text-align: center;
   color: #fff;
-  /* Entry animation — CPU-friendly: margin-top (layout) */
+  /* Entry animation — GPU-composited: transform + opacity */
   animation: card-in 0.5s ease-out both;
 }
 
 @keyframes card-in {
-  from { margin-top: 40px; }
-  to   { margin-top: 0; }
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
 /* ============================================================

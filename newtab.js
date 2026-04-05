@@ -54,7 +54,8 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (data) => {
     btnGo.classList.remove('hidden');
 
     if (data.autoRedirect) {
-      startCountdown(parseInt(data.redirectDelay, 10) || 3);
+      const delay = parseInt(data.redirectDelay, 10);
+      startCountdown(delay >= 0 ? delay : 3);
     }
   } else {
     urlDisplay.classList.add('hidden');
@@ -65,6 +66,11 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (data) => {
 
 // ── Countdown ─────────────────────────────────────────────
 function startCountdown(seconds) {
+  if (seconds === 0) {
+    navigate();
+    return;
+  }
+
   remaining = seconds;
   countdownEl.textContent = remaining;
   countdownWrap.classList.remove('hidden');
@@ -89,8 +95,18 @@ function cancelCountdown() {
 }
 
 // ── Navigation ────────────────────────────────────────────
-function navigate() {
-  if (currentUrl) {
+async function navigate() {
+  if (!currentUrl) return;
+  // window.location.href cannot navigate to file:// URLs from an extension
+  // page; chrome.tabs.update works for all URL schemes including file://.
+  try {
+    const tab = await chrome.tabs.getCurrent();
+    if (tab) {
+      await chrome.tabs.update(tab.id, { url: currentUrl });
+    } else {
+      window.location.href = currentUrl;
+    }
+  } catch {
     window.location.href = currentUrl;
   }
 }
