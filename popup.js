@@ -50,9 +50,9 @@ saveBtn.addEventListener('click', () => {
     return;
   }
 
-  // Normalise: add https:// when no scheme is provided
+  // Normalise: add https:// only when no scheme is provided
   let finalUrl = rawUrl;
-  if (!/^https?:\/\//i.test(finalUrl)) {
+  if (!/^[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//i.test(finalUrl)) {
     finalUrl = 'https://' + finalUrl;
     urlInput.value = finalUrl;
   }
