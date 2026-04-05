@@ -3,7 +3,7 @@
   "name": "Default Homepage",
   "version": "1.0.0",
   "description": "Set a default address that opens whenever you open a new browser tab.",
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
