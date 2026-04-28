@@ -1,49 +1,596 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>New Tab</title>
-  <link rel="stylesheet" href="newtab.css" />
-</head>
-<body>
+<!doctype html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Helium — Ana Sayfa</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-  <!-- Animated background blobs (GPU-composited: transform + opacity) -->
-  <div class="bg-blob blob-1"></div>
-  <div class="bg-blob blob-2"></div>
-  <div class="bg-blob blob-3"></div>
+            :root {
+                --g1: #64ffda;
+                --g2: #a78bfa;
+                --card: #0e1628;
+                --card-hover: #131d33;
+                --border: rgba(255, 255, 255, 0.09);
+                --border-hover: rgba(255, 255, 255, 0.18);
+                --text: #dde6f0;
+                --dim: rgba(221, 230, 240, 0.4);
+            }
 
-  <div class="page-center">
+            html,
+            body {
+                height: 100%;
+                font-family: "Sora", sans-serif;
+                color: var(--text);
+                overflow-x: hidden;
+                background: #07101f;
+            }
 
-    <!-- Clock card -->
-    <div class="glass-card clock-card">
-      <div id="clock" class="clock">00:00:00</div>
-      <div id="date"  class="date">Monday, 1 January 2026</div>
-    </div>
+            /* ── BACKGROUND ── */
+            .bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                overflow: hidden;
+            }
+            .orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(100px);
+                animation: drift linear infinite;
+            }
+            .o1 {
+                width: 560px;
+                height: 560px;
+                background: #1e0b4a;
+                top: -160px;
+                left: -140px;
+                animation-duration: 26s;
+                opacity: 0.6;
+            }
+            .o2 {
+                width: 440px;
+                height: 440px;
+                background: #071e18;
+                bottom: -120px;
+                right: -100px;
+                animation-duration: 32s;
+                animation-direction: reverse;
+                opacity: 0.6;
+            }
+            .o3 {
+                width: 260px;
+                height: 260px;
+                background: #2a0f5c;
+                top: 35%;
+                left: 52%;
+                animation-duration: 42s;
+                opacity: 0.35;
+            }
 
-    <!-- URL card -->
-    <div class="glass-card url-card">
-      <div class="url-label">Default Homepage</div>
-      <div id="url-display" class="url-display">—</div>
+            @keyframes drift {
+                0% {
+                    transform: translate(0, 0);
+                }
+                33% {
+                    transform: translate(24px, -14px);
+                }
+                66% {
+                    transform: translate(-14px, 10px);
+                }
+                100% {
+                    transform: translate(0, 0);
+                }
+            }
 
-      <div id="countdown-wrap" class="countdown-wrap hidden">
-        Redirecting in <span id="countdown">3</span>s…
-      </div>
+            .grid {
+                position: fixed;
+                inset: 0;
+                z-index: 1;
+                pointer-events: none;
+                background-image:
+                    linear-gradient(
+                        rgba(255, 255, 255, 0.014) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0.014) 1px,
+                        transparent 1px
+                    );
+                background-size: 52px 52px;
+            }
 
-      <div class="url-actions">
-        <button id="btn-go"       class="btn btn-primary">Open</button>
-        <button id="btn-cancel"   class="btn btn-ghost hidden">Cancel</button>
-        <button id="btn-settings" class="btn btn-ghost">⚙ Settings</button>
-      </div>
+            /* ── LAYOUT ── */
+            .page {
+                position: relative;
+                z-index: 2;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 28px 20px 40px;
+                gap: 22px;
+            }
 
-      <div id="no-url-hint" class="hint">
-        No default address configured yet.<br/>
-        Click the extension icon or <button class="link-btn" id="hint-settings">open settings</button>.
-      </div>
-    </div>
+            /* ── HEADER ── */
+            header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: fadeDown 0.5s ease both;
+            }
+            .logo-mark {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: linear-gradient(135deg, var(--g1), var(--g2));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: "Space Mono", monospace;
+                font-size: 16px;
+                font-weight: 700;
+                color: #07101f;
+            }
+            .logo-text {
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: -0.3px;
+                background: linear-gradient(90deg, var(--g1), var(--g2));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
 
-  </div>
+            /* ── CLOCK ── */
+            .clock-block {
+                text-align: center;
+                animation: fadeDown 0.5s 0.06s ease both;
+            }
+            .clock {
+                font-family: "Space Mono", monospace;
+                font-size: clamp(52px, 9vw, 88px);
+                font-weight: 700;
+                letter-spacing: -3px;
+                background: linear-gradient(135deg, #fff 25%, var(--g1) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                line-height: 1;
+            }
+            .dateline {
+                font-size: 12px;
+                font-weight: 300;
+                color: var(--dim);
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                margin-top: 6px;
+            }
 
-  <script src="newtab.js"></script>
-</body>
+            /* ── SEARCH ── */
+            .search-wrap {
+                width: 100%;
+                max-width: 600px;
+                animation: fadeUp 0.5s 0.12s ease both;
+            }
+            .search-box {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                gap: 10px;
+                transition: border-color 0.2s;
+            }
+            .search-box:focus-within {
+                border-color: var(--g1);
+            }
+            .s-icon {
+                color: var(--dim);
+                display: flex;
+                flex-shrink: 0;
+                transition: color 0.18s;
+            }
+            .search-box:focus-within .s-icon {
+                color: var(--g1);
+            }
+            .s-input {
+                flex: 1;
+                background: transparent;
+                border: none;
+                outline: none;
+                font-family: "Sora", sans-serif;
+                font-size: 15px;
+                color: var(--text);
+                padding: 15px 0;
+                caret-color: var(--g1);
+            }
+            .s-input::placeholder {
+                color: var(--dim);
+            }
+            .engine-btn {
+                font-family: "Space Mono", monospace;
+                font-size: 10px;
+                color: var(--dim);
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                padding: 3px 7px;
+                cursor: pointer;
+                white-space: nowrap;
+                user-select: none;
+                transition:
+                    color 0.15s,
+                    border-color 0.15s;
+            }
+            .engine-btn:hover {
+                color: var(--g1);
+                border-color: rgba(100, 255, 218, 0.3);
+            }
+
+            /* ── SHORTCUTS ── */
+            .shortcuts {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 9px;
+                justify-content: center;
+                max-width: 640px;
+                width: 100%;
+                animation: fadeUp 0.5s 0.18s ease both;
+            }
+            .sc {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 7px;
+                padding: 12px 15px;
+                min-width: 72px;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                text-decoration: none;
+                color: var(--text);
+                /* transform only — compositor thread, sıfır repaint */
+                transition:
+                    transform 0.17s cubic-bezier(0.34, 1.5, 0.64, 1),
+                    background 0.17s,
+                    border-color 0.17s;
+            }
+            .sc:hover {
+                transform: translateY(-4px);
+                background: var(--card-hover);
+                border-color: var(--border-hover);
+            }
+            .sc:active {
+                transform: translateY(-1px);
+            }
+
+            .sc-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 9px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            .sc-icon img {
+                width: 20px;
+                height: 20px;
+                object-fit: contain;
+            }
+            .sc-label {
+                font-size: 10px;
+                color: var(--dim);
+            }
+
+            .ic-r {
+                background: rgba(252, 100, 100, 0.1);
+            }
+            .ic-p {
+                background: rgba(167, 139, 250, 0.1);
+            }
+            .ic-b {
+                background: rgba(96, 165, 250, 0.1);
+            }
+            .ic-o {
+                background: rgba(251, 146, 60, 0.1);
+            }
+            .ic-g {
+                background: rgba(100, 255, 218, 0.1);
+            }
+            .ic-s {
+                background: rgba(148, 163, 184, 0.1);
+            }
+            .ic-pk {
+                background: rgba(244, 114, 182, 0.1);
+            }
+
+            /* ── BOTTOM CARDS ── */
+            .bottom {
+                display: flex;
+                gap: 12px;
+                width: 100%;
+                max-width: 640px;
+                animation: fadeUp 0.5s 0.24s ease both;
+            }
+            .card {
+                flex: 1;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 14px 16px;
+            }
+            .card-label {
+                font-size: 9px;
+                font-weight: 500;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--dim);
+                margin-bottom: 9px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .note {
+                width: 100%;
+                background: transparent;
+                border: none;
+                outline: none;
+                font-family: "Sora", sans-serif;
+                font-size: 12px;
+                color: var(--text);
+                resize: none;
+                height: 64px;
+                caret-color: var(--g1);
+                line-height: 1.65;
+            }
+            .note::placeholder {
+                color: var(--dim);
+            }
+            .tips {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .tip {
+                font-size: 11px;
+                line-height: 1.5;
+                color: var(--dim);
+                padding-left: 10px;
+                border-left: 2px solid rgba(100, 255, 218, 0.18);
+                transition: color 0.15s;
+            }
+            .tip:hover {
+                color: var(--text);
+            }
+
+            /* ── FOOTER ── */
+            footer {
+                font-size: 10px;
+                color: rgba(221, 230, 240, 0.14);
+                letter-spacing: 1px;
+                animation: fadeUp 0.5s 0.3s ease both;
+            }
+
+            @keyframes fadeDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes fadeUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @media (max-width: 500px) {
+                .bottom {
+                    flex-direction: column;
+                }
+                .clock {
+                    letter-spacing: -2px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg">
+            <div class="orb o1"></div>
+            <div class="orb o2"></div>
+            <div class="orb o3"></div>
+        </div>
+        <div class="grid"></div>
+
+        <div class="page">
+            <header>
+                <div class="logo-mark">He</div>
+                <span class="logo-text">Helium</span>
+            </header>
+
+            <div class="clock-block">
+                <div class="clock" id="clock">--:--</div>
+                <div class="dateline" id="dateline">--</div>
+            </div>
+
+            <div class="search-wrap">
+                <div class="search-box">
+                    <span class="s-icon">
+                        <svg
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </span>
+                    <input
+                        class="s-input"
+                        id="searchInput"
+                        placeholder="Ara veya URL gir…"
+                        autocomplete="off"
+                        autofocus
+                    />
+                    <div class="engine-btn" id="engineBtn">Google</div>
+                </div>
+            </div>
+
+            <nav class="shortcuts">
+                <a href="https://mail.google.com" class="sc" target="_blank">
+                    <div class="sc-icon ic-r">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=mail.google.com&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">Gmail</span>
+                </a>
+                <a href="https://youtube.com" class="sc" target="_blank">
+                    <div class="sc-icon ic-r">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=youtube.com&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">YouTube</span>
+                </a>
+                <a href="https://github.com" class="sc" target="_blank">
+                    <div class="sc-icon ic-p">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=github.com&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">GitHub</span>
+                </a>
+                <a href="https://x.com" class="sc" target="_blank">
+                    <div class="sc-icon ic-b">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=x.com&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">X</span>
+                </a>
+                <a href="https://reddit.com" class="sc" target="_blank">
+                    <div class="sc-icon ic-o">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=reddit.com&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">Reddit</span>
+                </a>
+                <a href="https://open.spotify.com" class="sc" target="_blank">
+                    <div class="sc-icon ic-g">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=spotify.com&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">Spotify</span>
+                </a>
+                <a href="https://notion.so" class="sc" target="_blank">
+                    <div class="sc-icon ic-s">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=notion.so&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">Notion</span>
+                </a>
+                <a href="https://linear.app" class="sc" target="_blank">
+                    <div class="sc-icon ic-pk">
+                        <img
+                            src="https://www.google.com/s2/favicons?domain=linear.app&sz=64"
+                            alt=""
+                        />
+                    </div>
+                    <span class="sc-label">Linear</span>
+                </a>
+            </nav>
+
+            <div class="bottom">
+                <div class="card" style="flex: 1.5">
+                    <div class="card-label">
+                        <svg
+                            width="9"
+                            height="9"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M12 20h9" />
+                            <path
+                                d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+                            />
+                        </svg>
+                        Hızlı Not
+                    </div>
+                    <textarea
+                        class="note"
+                        id="noteInput"
+                        placeholder="Aklındaki her şeyi buraya yaz…"
+                    ></textarea>
+                </div>
+                <div class="card" style="flex: 1.6">
+                    <div class="card-label">
+                        <svg
+                            width="9"
+                            height="9"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path
+                                d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M6 16h.01M10 16h.01M14 16h.01"
+                            />
+                        </svg>
+                        Kısayollar
+                    </div>
+                    <ul class="tips" id="tipsList"></ul>
+                </div>
+            </div>
+
+            <footer>Helium Browser &nbsp;·&nbsp; Kişisel Ana Sayfa</footer>
+        </div>
+
+        <script src="newtab.js"></script>
+    </body>
 </html>
